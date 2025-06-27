@@ -45,7 +45,7 @@ window.addEventListener("DOMContentLoaded", () => {
             if (placeholder) {
                 placeholder.innerHTML = data;
 
-                // Animate form appearance
+                // ✅ Animate form
                 const form = document.querySelector(".enquiry-form-card");
                 if (form) {
                     form.style.opacity = "0";
@@ -57,16 +57,17 @@ window.addEventListener("DOMContentLoaded", () => {
                     }, 300);
                 }
 
-                // ✅ Scroll to form if URL hash is #enquiry-placeholder
-                if (window.location.hash === "#enquiry-placeholder") {
-                    setTimeout(() => {
-                        document
-                            .getElementById("enquiry-placeholder")
-                            .scrollIntoView({ behavior: "smooth" });
-                    }, 400); // Give a small delay to ensure it's rendered
+                // ✅ Add this block to ensure functionality works on mobile
+                const categorySelect = document.getElementById("category");
+                if (categorySelect) {
+                    categorySelect.addEventListener("change", toggleSubOptions);
                 }
+
+                // ✅ Optionally trigger once on load if needed
+                toggleSubOptions();
             }
         });
+
 
 
 
