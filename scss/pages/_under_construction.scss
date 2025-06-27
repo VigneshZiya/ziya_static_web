@@ -19,16 +19,17 @@
   }
 }
 
-.construction-subheading {
-  font-size: 1.1rem;
-  font-weight: 400;
-  color: #444;
-  margin-bottom: 2rem;
+.construction-image {
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 1.5rem;
 
   @media (max-width: 768px) {
-    font-size: 1rem;
+    height: 240px;
+    object-fit: contain;
   }
 }
+
 
 h4 {
   font-weight: 600;

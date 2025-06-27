@@ -21,7 +21,7 @@
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: center; // Already present, good
-  min-height: 100%; 
+  min-height: 100%;
   position: relative;
   z-index: 2;
   max-width: 1200px;
@@ -48,7 +48,7 @@
 }
 
 .enquiry-form-hero {
- max-width: 600px;
+  max-width: 600px;
   margin: 0; // Remove auto margins
   text-align: left;
   color: white;
@@ -165,7 +165,7 @@
   border-radius: 10px;
   font-size: 1rem;
   background: white;
-  color: #b5b8b9;
+  color: #333;
   transition: border-color 0.3s ease;
 
   &:focus {
@@ -298,6 +298,23 @@
   opacity: 0.7;
   pointer-events: none;
 }
+.enquiry-input-wrapper.active-icon {
+  .enquiry-input-icon-img {
+    filter: brightness(0) saturate(100%) invert(53%) sepia(88%) saturate(473%)
+      hue-rotate(167deg) brightness(97%) contrast(98%);
+  }
+
+  .enquiry-input-icon {
+    color: #00aeef;
+  }
+
+  input,
+  select,
+  textarea {
+    color: #222 !important; // Brighter text color
+  }
+}
+
 @media (max-width: 960px) {
   .enquiry-form-container {
     flex-direction: column;
