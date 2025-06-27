@@ -4,6 +4,7 @@ window.addEventListener("DOMContentLoaded", () => {
         .then(res => res.text())
         .then(data => {
             document.getElementById("nav-placeholder").innerHTML = data;
+
             const hamburger = document.getElementById("hamburger");
             const navMenu = document.getElementById("navMenu");
 
@@ -13,7 +14,19 @@ window.addEventListener("DOMContentLoaded", () => {
                     navMenu.classList.toggle("active");
                 });
             }
+
+            // ✅ Close menu when any nav link is clicked (especially on mobile)
+            const navLinks = document.querySelectorAll(".nav-menu a");
+            navLinks.forEach(link => {
+                link.addEventListener("click", () => {
+                    if (hamburger.classList.contains("active")) {
+                        hamburger.classList.remove("active");
+                        navMenu.classList.remove("active");
+                    }
+                });
+            });
         });
+
 
     // Load Footer + Scroll-to-Top setup
     fetch("partials/footer.html")
@@ -57,16 +70,30 @@ window.addEventListener("DOMContentLoaded", () => {
                     }, 300);
                 }
 
-                // ✅ Add this block to ensure functionality works on mobile
+                // ✅ Add category dropdown event
                 const categorySelect = document.getElementById("category");
                 if (categorySelect) {
                     categorySelect.addEventListener("change", toggleSubOptions);
                 }
 
-                // ✅ Optionally trigger once on load if needed
+                // ✅ Run once initially to hide/show appropriate field
                 toggleSubOptions();
+
+                // ✅ Scroll to form if URL contains the anchor (for Safari/iOS)
+                if (window.location.hash === "#enquiry-placeholder") {
+                    setTimeout(() => {
+                        const scrollTarget = document.getElementById("enquiry-placeholder");
+                        if (scrollTarget) {
+                            scrollTarget.scrollIntoView({
+                                behavior: "smooth",
+                                block: "start"
+                            });
+                        }
+                    }, 600); // Delay to ensure content is fully injected
+                }
             }
         });
+
 
 
 
@@ -89,8 +116,26 @@ window.addEventListener("DOMContentLoaded", () => {
             const aboutSection = document.getElementById("about-placeholder");
             if (aboutSection) {
                 aboutSection.innerHTML = data;
+
+                // ✅ Scroll if coming via anchor link
+                if (window.location.hash === "#about-placeholder") {
+                    setTimeout(() => {
+                        document
+                            .getElementById("about-placeholder")
+                            .scrollIntoView({ behavior: "smooth" });
+
+                        // ✅ Optional: close mobile menu if open
+                        const hamburger = document.getElementById("hamburger");
+                        const navMenu = document.getElementById("navMenu");
+                        if (hamburger?.classList.contains("active")) {
+                            hamburger.classList.remove("active");
+                            navMenu.classList.remove("active");
+                        }
+                    }, 300); // delay to ensure content is rendered
+                }
             }
         });
+
 
 
     // Load Services Section
@@ -111,32 +156,52 @@ window.addEventListener("DOMContentLoaded", () => {
             if (stats) {
                 stats.innerHTML = data;
 
-                // Counter animation
-                const counters = stats.querySelectorAll(".stat-number");
+                // Counter animation function
+                function animateCounters() {
+                    const counters = stats.querySelectorAll(".stat-number");
 
-                counters.forEach((counter) => {
-                    const targetText = counter.textContent.trim();
-                    const target = parseInt(targetText.replace(/\D/g, ""));
+                    counters.forEach((counter) => {
+                        const targetText = counter.textContent.trim();
+                        const target = parseInt(targetText.replace(/\D/g, ""));
 
-                    if (isNaN(target)) return;
+                        if (isNaN(target)) return;
 
-                    let count = 0;
-                    const increment = target / 100;
+                        let count = 0;
+                        const increment = target / 100;
 
-                    const updateCount = () => {
-                        count += increment;
-                        if (count < target) {
-                            counter.textContent = `${Math.ceil(count)}+`;
-                            requestAnimationFrame(updateCount);
-                        } else {
-                            counter.textContent = `${target}+`;
+                        const updateCount = () => {
+                            count += increment;
+                            if (count < target) {
+                                counter.textContent = `${Math.ceil(count)}+`;
+                                requestAnimationFrame(updateCount);
+                            } else {
+                                counter.textContent = `${target}+`;
+                            }
+                        };
+
+                        updateCount();
+                    });
+                }
+
+                // Observe when stats section comes into view
+                let statsAnimated = false;
+
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach((entry) => {
+                        if (entry.isIntersecting && !statsAnimated) {
+                            animateCounters();
+                            statsAnimated = true;
+                            observer.unobserve(entry.target);
                         }
-                    };
-
-                    updateCount();
+                    });
+                }, {
+                    threshold: 0.5 // 50% visible before triggering
                 });
+
+                observer.observe(stats);
             }
         });
+
 
 
 
